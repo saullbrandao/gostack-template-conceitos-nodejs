@@ -29,7 +29,25 @@ app.post("/repositories", (request, response) => {
 });
 
 app.put("/repositories/:id", (request, response) => {
-  // TODO
+  const { title, url, techs } = request.body
+  const { id } = request.params
+
+  const repoIndex = repositories.findIndex(repo => repo.id === id)
+
+  if (repoIndex < 0) {
+    return response.status(400).json({ error: "Repository does not exists" })
+  }
+
+  repo = {
+    id,
+    title,
+    url,
+    techs,
+    likes: repositories[repoIndex].likes
+  }
+  repositories[repoIndex] = repo
+
+  return response.json(repo)
 });
 
 app.delete("/repositories/:id", (request, response) => {
@@ -38,7 +56,7 @@ app.delete("/repositories/:id", (request, response) => {
   const repoIndex = repositories.findIndex(repo => repo.id === id)
 
   if (repoIndex < 0) {
-    return response.status(400).json({ error: "Repository does not exist" })
+    return response.status(400).json({ error: "Repository does not exist." })
   }
 
   repositories.splice(repoIndex, 1)
